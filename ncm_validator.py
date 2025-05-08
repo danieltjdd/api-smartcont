@@ -26,8 +26,8 @@ class NCMValidator:
     def load_excel_files(self, user_file: str, ncm_file: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Carrega e prepara os arquivos Excel/CSV com as colunas corretas."""
         try:
-            # Carrega planilha do usuário (continua como Excel)
-            df_user = pd.read_excel(user_file)
+            # Carrega planilha do usuário (sempre como string)
+            df_user = pd.read_excel(user_file, dtype={'NCM': str})
             df_user = df_user[['NCM', 'Descricao']].copy() if 'Descricao' in df_user.columns else df_user[['NCM', 'descrição']].rename(columns={'descrição': 'Descricao'})
             df_user['NCM'] = df_user['NCM'].astype(str).str.zfill(8)
 
