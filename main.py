@@ -106,7 +106,7 @@ async def processar_ncm(usuario: UploadFile = File(...)):
         user_path = f"/tmp/{usuario.filename}"
         with open(user_path, "wb") as f:
             f.write(await usuario.read())
-        ncm_path = "/app/entrada/Tabela_NCM_Vigente.csv"  # Agora CSV
+        ncm_path = "Tabela_NCM_Vigente.csv"  # Agora na raiz
         output_path = f"/tmp/relatorio_ncm_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         API_KEY = os.environ.get("OPENAI_API_KEY", "")
         validator = NCMValidator(API_KEY)
