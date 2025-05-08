@@ -24,24 +24,20 @@ class NCMValidator:
         self.wait_time = wait_time
         
     def load_excel_files(self, user_file: str, ncm_file: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-        """Carrega e prepara os arquivos Excel com as colunas corretas."""
+        """Carrega e prepara os arquivos Excel/CSV com as colunas corretas."""
         try:
-            # Carrega planilha do usuário
+            # Carrega planilha do usuário (continua como Excel)
             df_user = pd.read_excel(user_file)
-            df_user = df_user[['NCM', 'Descricao']].copy()
-            df_user.columns = ['NCM', 'Descricao']
-            # Garante 8 dígitos com zeros à esquerda
+            df_user = df_user[['NCM', 'Descricao']].copy() if 'Descricao' in df_user.columns else df_user[['NCM', 'descrição']].rename(columns={'descrição': 'Descricao'})
             df_user['NCM'] = df_user['NCM'].astype(str).str.zfill(8)
 
-            # Carrega tabela oficial de NCM
-            df_ncm = pd.read_excel(ncm_file)
-            df_ncm = df_ncm[['Codigo', 'Descricao']].copy()
-            df_ncm.columns = ['Codigo', 'Descricao']
-            # Coluna auxiliar: remove pontos e zeros à direita
+            # Carrega tabela oficial de NCM (agora CSV)
+            df_ncm = pd.read_csv(ncm_file, sep=';', dtype=str, encoding='utf-8')
+            df_ncm = df_ncm[['Codigo', 'Descricao']].copy() if 'Descricao' in df_ncm.columns else df_ncm[['codigo', 'descrição']].rename(columns={'codigo': 'Codigo', 'descrição': 'Descricao'})
             df_ncm['Codigo_Familia'] = df_ncm['Codigo'].astype(str).str.replace('.', '', regex=False).str.rstrip('0')
             return df_user, df_ncm
         except Exception as e:
-            logging.error(f"Erro ao carregar arquivos Excel: {str(e)}")
+            logging.error(f"Erro ao carregar arquivos: {str(e)}")
             raise
 
     def buscar_descricao_concatenada(self, codigo: str, df_ncm: pd.DataFrame) -> str:
