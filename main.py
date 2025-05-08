@@ -40,7 +40,7 @@ async def processar_pis_cofins(usuario: UploadFile = File(...)):
         user_path = f"/tmp/{usuario.filename}"
         with open(user_path, "wb") as f:
             f.write(await usuario.read())
-        usuario_df = pd.read_excel(user_path, dtype=str)
+        usuario_df = pd.read_excel(user_path, dtype={'NCM': str})
         df = usuario_df.copy()
         df.columns = [col.strip() for col in df.columns]
         df['NCM'] = df['NCM'].astype(str).str.zfill(8)
