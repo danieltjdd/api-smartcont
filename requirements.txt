@@ -5,3 +5,5 @@ openpyxl
 python-multipart
 openai==0.28
 gunicorn
+redis
+google-cloud-firestore
