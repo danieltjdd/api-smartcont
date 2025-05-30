@@ -18,6 +18,7 @@ app.add_middleware(
     allow_origins=[
         "https://www.smartcont.online",
         "https://smartcont.online",
+        "http://localhost:8080",  # Adicionado para desenvolvimento local
         "http://localhost:5173"
     ],
     allow_credentials=True,
@@ -120,4 +121,4 @@ async def processar_ncm(usuario: UploadFile = File(...)):
 
 @app.get("/")
 def health():
-    return {"status": "ok"} 
+    return {"status": "ok"}
