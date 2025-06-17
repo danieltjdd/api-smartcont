@@ -32,7 +32,9 @@ redis_url = "rediss://default:AWuIAAIjcDFlMTE2NzdhNjhjYzI0ZTFmYmM1OGE3NzUzYzc4ZW
 r = redis.from_url(redis_url)
 
 # Configuração Firestore
-db = firestore.Client()  # Certifique-se de ter as credenciais do Firebase configuradas
+   service_account_info = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
+   credentials = service_account.Credentials.from_service_account_info(service_account_info)
+   db = firestore.Client(credentials=credentials, project=service_account_info['project_id']) # Certifique-se de ter as credenciais do Firebase configuradas
 
 UPLOAD_DIR = "/tmp/uploads_ncm"
 RESULT_DIR = "/tmp/results_ncm"
