@@ -1,12 +1,16 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
-from google.cloud import firestore
 import redis
 import uuid
 import os
 from datetime import datetime
 from ncm_validator import NCMValidator
+
+# IMPORTS NECESSÁRIOS PARA O FIREBASE
+import json
+from google.cloud import firestore
+from google.oauth2 import service_account
 
 app = FastAPI(
     docs_url="/docs",
@@ -31,10 +35,10 @@ app.add_middleware(
 redis_url = "rediss://default:AWuIAAIjcDFlMTE2NzdhNjhjYzI0ZTFmYmM1OGE3NzUzYzc4ZWYxN3AxMA@neutral-snake-27528.upstash.io:6379"
 r = redis.from_url(redis_url)
 
-# Configuração Firestore
-   service_account_info = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
-   credentials = service_account.Credentials.from_service_account_info(service_account_info)
-   db = firestore.Client(credentials=credentials, project=service_account_info['project_id']) # Certifique-se de ter as credenciais do Firebase configuradas
+# Configuração Firestore CORRETA PARA O RENDER
+service_account_info = json.loads(os.environ['GOOGLE_APPLICATION_CREDENTIALS_JSON'])
+credentials = service_account.Credentials.from_service_account_info(service_account_info)
+db = firestore.Client(credentials=credentials, project=service_account_info['project_id'])
 
 UPLOAD_DIR = "/tmp/uploads_ncm"
 RESULT_DIR = "/tmp/results_ncm"
